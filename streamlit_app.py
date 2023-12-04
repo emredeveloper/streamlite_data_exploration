@@ -41,7 +41,13 @@ save_csv_button = st.button('Save as CSV')
 
 # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
 def save_csv():
-    selected_data = dataset[(dataset['sex'] == sex) & (dataset['day'] == day) & (dataset['time'] == time)]
+    selected_data = dataset.copy()
+    if 'sex' in dataset.columns:
+        selected_data = selected_data[selected_data['sex'] == sex]
+    if 'day' in dataset.columns:
+        selected_data = selected_data[selected_data['day'] == day]
+    if 'time' in dataset.columns:
+        selected_data = selected_data[selected_data['time'] == time]
     
     if not selected_data.empty:
         selected_data.to_csv(f"{csv_name}.csv", index=False)
@@ -50,10 +56,10 @@ def save_csv():
         st.warning("No data available for the selected filters.")
 
 # Dropdown değişikliklerine tepki gösterme
-selected_data = dataset[(dataset['sex'] == sex) & (dataset['day'] == day) & (dataset['time'] == time)]
-if not selected_data.empty:
-    x_feature = st.selectbox('Select X Feature', selected_data.columns.tolist())
-    y_feature = st.selectbox('Select Y Feature', selected_data.columns.tolist())
+selected_data = dataset.copy()
+if 'sex' in dataset.columns:
+    x_feature = st.selectbox('Select X Feature', dataset.columns.tolist())
+    y_feature = st.selectbox('Select Y Feature', dataset.columns.tolist())
     create_bar_chart(selected_data, x_feature, y_feature)
     
     # Veri seti hakkında genel istatistiksel bilgiler
