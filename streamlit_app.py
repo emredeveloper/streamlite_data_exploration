@@ -1,98 +1,40 @@
 import streamlit as st
-import seaborn as sns
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
 import base64
-
-# Set the theme
-st.set_option('deprecation.showPyplotGlobalUse', False)
-
-# Load the 'tips' dataset from the Seaborn library
-tips = sns.load_dataset('tips')
 
 # Yüklü veri çerçevesi
 uploaded_data = pd.DataFrame()
 
-# Page layout
-st.set_page_config(
-    page_title="Tips Dataset Analysis",
-    page_icon=":chart_with_upwards_trend:",
-    layout="wide"
-)
+# Veri çerçevesine yeni veri eklemek için bir Streamlit formu
+st.sidebar.header("Add New Data")
+new_data = st.sidebar.form(key="new_data_form")
+new_value = new_data.text_input("Enter New Value", key="new_value")
+submit_button = new_data.form_submit_button("Add New Data")
 
-# Main title
-st.markdown('# Tips Dataset Analysis')
+# Eğer form gönderildiyse, yeni veriyi veri çerçevesine ekle
+if submit_button:
+    new_row = pd.DataFrame({"New Column": [new_value]})
+    uploaded_data = pd.concat([uploaded_data, new_row], ignore_index=True)
 
-# Sidebar
-st.sidebar.header("Options")
+# Yüklü veri çerçevesini göster
+st.write("## Uploaded Data")
+st.write(uploaded_data)
 
-# Dropdowns
-sex = st.sidebar.selectbox('Select Gender', ['Male', 'Female'])
-day = st.sidebar.selectbox('Select Day', tips['day'].unique().tolist())
-time = st.sidebar.selectbox('Select Time', ['Lunch', 'Dinner'])
-
-# Additional Filters
-st.sidebar.subheader("Additional Filters")
-smoker_filter = st.sidebar.checkbox("Filter by Smoker")
-
-# Function to create a bar chart
-def create_bar_chart(selected_data, x_feature, y_feature):
-    plt.figure(figsize=(12, 6))
-    sns.barplot(x=x_feature, y=y_feature, data=selected_data)
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    st.pyplot()
-
-# Function to display the correlation matrix for numeric columns
-def display_correlation_matrix(selected_data):
-    st.write("### Correlation Matrix")
-
-    # Select numeric columns
-    numerical_columns = selected_data.select_dtypes(include=['float64', 'int64']).columns.tolist()
-
-    # Calculate correlation matrix for numeric columns
-    correlation_matrix = selected_data[numerical_columns].corr()
-
-    plt.figure(figsize=(10, 8))
-    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
-    st.pyplot()
-
-# Function to save the DataFrame as a CSV file
-def save_as_csv(selected_data, csv_name='exported_data'):
-    csv_file = selected_data.to_csv(index=False).encode('utf-8')
+# Yüklü veriyi CSV olarak kaydet
+if st.button("Update and Save as CSV"):
+    # CSV'yi kaydet
+    csv_file = uploaded_data.to_csv(index=False).encode('utf-8')
     b64 = base64.b64encode(csv_file).decode()
-    href = f'<a href="data:file/csv;base64,{b64}" download="{csv_name}.csv">Click to Download {csv_name}.csv</a>'
+    href = f'<a href="data:file/csv;base64,{b64}" download="updated_data.csv">Click to Download Updated CSV</a>'
     st.sidebar.markdown(href, unsafe_allow_html=True)
-
-# Function to display the scatter plot
-def display_scatter_plot(selected_data, x_feature, y_feature):
-    st.write("### Scatter Plot")
-
-    plt.figure(figsize=(10, 6))
-    sns.scatterplot(x=x_feature, y=y_feature, data=selected_data, hue='sex', palette='viridis', size='total_bill')
-    plt.title(f'Scatter Plot between {x_feature} and {y_feature}')
-    plt.xlabel(x_feature)
-    plt.ylabel(y_feature)
-    st.pyplot()
-
-# Function to display the regression plot
-def display_regression_plot(selected_data, x_feature, y_feature):
-    st.write("### Regression Plot")
-
-    plt.figure(figsize=(10, 6))
-    sns.regplot(x=x_feature, y=y_feature, data=selected_data, scatter_kws={'s': 30}, line_kws={'color': 'red'})
-    plt.title(f'Regression Plot between {x_feature} and {y_feature}')
-    plt.xlabel(x_feature)
-    plt.ylabel(y_feature)
-    st.pyplot()
+    st.success("Data updated and saved as CSV.")
 
 # Function to handle file upload and analysis
 def handle_uploaded_file():
+    global uploaded_data
     uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
     if uploaded_file is not None:
-        global uploaded_data
         uploaded_data = pd.read_csv(uploaded_file)
 
         st.write("## Uploaded Data")
@@ -108,6 +50,10 @@ def handle_uploaded_file():
 
         # Line plot instead of bar chart
         st.line_chart(uploaded_data[selected_column])
+
+# Call the function to handle file upload and analysis
+handle_uploaded_file()
+
 
         # Update button
         if st.button("Update and Save as CSV"):
