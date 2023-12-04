@@ -20,9 +20,12 @@ elif selected_dataset_name == 'iris':
 st.markdown(f'# {selected_dataset_name.capitalize()} Dataset Analysis')
 
 # Dropdown'lar
-sex = st.selectbox('Select Gender', dataset['sex'].unique())
-day = st.selectbox('Select Day', dataset['day'].unique())
-time = st.selectbox('Select Time', dataset['time'].unique())
+if 'sex' in dataset.columns:
+    sex = st.selectbox('Select Gender', dataset['sex'].unique())
+if 'day' in dataset.columns:
+    day = st.selectbox('Select Day', dataset['day'].unique())
+if 'time' in dataset.columns:
+    time = st.selectbox('Select Time', dataset['time'].unique())
 
 # Matplotlib Figürü oluşturma fonksiyonu
 def create_bar_chart(selected_data, x_feature, y_feature):
@@ -72,9 +75,10 @@ if not selected_data.empty:
 
     # Filtreleme seçenekleri
     st.write("### Additional Filters")
-    smoker_filter = st.checkbox("Filter by Smoker")
-    if smoker_filter:
-        selected_data = selected_data[selected_data['smoker'] == 'Yes']
+    if 'smoker' in dataset.columns:
+        smoker_filter = st.checkbox("Filter by Smoker")
+        if smoker_filter:
+            selected_data = selected_data[selected_data['smoker'] == 'Yes']
 
     # Yeniden oluşturulan grafik
     create_bar_chart(selected_data, x_feature, y_feature)
