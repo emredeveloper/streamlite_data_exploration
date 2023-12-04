@@ -6,26 +6,25 @@ import matplotlib.pyplot as plt
 # Temayı seç
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-# Seaborn kütüphanesinden tips veri setini yükleme
-tips = sns.load_dataset('tips')
-
-# Sayfa düzenleme
-st.set_page_config(
-    page_title="Tips Dataset Analysis",
-    page_icon=":chart_with_upwards_trend:",
-    layout="wide"
-)
-
 # Ana başlık
-st.markdown('# Tips Veri Seti Analizi')
+st.markdown('# Veri Seti Analizi')
+
+# Veri seti seçimi
+selected_dataset = st.sidebar.selectbox('Select Dataset', ['tips', 'iris'])
+
+# Veri setini yükleme
+if selected_dataset == 'tips':
+    dataset = sns.load_dataset('tips')
+elif selected_dataset == 'iris':
+    dataset = sns.load_dataset('iris')
 
 # Sidebar'ı oluştur
 st.sidebar.header("Options")
 
 # Dropdown'lar
 sex = st.sidebar.selectbox('Select Gender', ['Male', 'Female'])
-day = st.sidebar.selectbox('Select Day', tips['day'].unique().tolist())
-time = st.sidebar.selectbox('Select Time', ['Lunch', 'Dinner'])
+day = st.sidebar.selectbox('Select Day', dataset['day'].unique().tolist())
+time = st.sidebar.selectbox('Select Time', dataset['time'].unique().tolist())
 
 # Matplotlib Figürü oluşturma fonksiyonu
 def create_bar_chart(selected_data, x_feature, y_feature):
@@ -41,19 +40,19 @@ save_csv_button = st.sidebar.button('Save as CSV')
 
 # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
 def save_csv():
-    selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
+    selected_data = dataset[(dataset['sex'] == sex) & (dataset['day'] == day) & (dataset['time'] == time)]
     
     if not selected_data.empty:
         selected_data.to_csv(f"{csv_name}.csv", index=False)
-        st.success(f"Data saved as {csv_name}.csv")
+        st.sidebar.success(f"Data saved as {csv_name}.csv")
     else:
-        st.warning("No data available for the selected filters.")
+        st.sidebar.warning("No data available for the selected filters.")
 
 # Dropdown değişikliklerine tepki gösterme
-selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
+selected_data = dataset[(dataset['sex'] == sex) & (dataset['day'] == day) & (dataset['time'] == time)]
 if not selected_data.empty:
-    x_feature = st.sidebar.selectbox('Select X Feature', selected_data.columns.tolist())
-    y_feature = st.sidebar.selectbox('Select Y Feature', selected_data.columns.tolist())
+    x_feature = st.sidebar.selectbox('Select X Feature', dataset.columns.tolist())
+    y_feature = st.sidebar.selectbox('Select Y Feature', dataset.columns.tolist())
     create_bar_chart(selected_data, x_feature, y_feature)
     
     # Veri seti hakkında genel istatistiksel bilgiler
@@ -85,13 +84,6 @@ else:
     st.sidebar.warning("No data available for the selected filters.")
 
 # Ana sayfa içeriği
-st.write("Welcome to the Tips Dataset Analysis App!")
-st.write("This app allows you to explore and analyze the 'tips' dataset using Streamlit and Seaborn.")
+st.write(f"Welcome to the {selected_dataset.capitalize()} Dataset Analysis App!")
+st.write("This app allows you to explore and analyze different datasets using Streamlit and Seaborn.")
 st.write("Use the sidebar on the left to customize your analysis.")
-
-# Örnek içerik ekleme
-st.write("Here are some key insights:")
-st.write("- The dataset contains information about tips given in a restaurant.")
-st.write("- You can filter the data based on gender, day, and time.")
-st.write("- Choose different features for X and Y axes to visualize the data.")
-st.write("- Save the filtered data as a CSV file using the 'Save as CSV' button in the sidebar.")
