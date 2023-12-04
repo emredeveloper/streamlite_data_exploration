@@ -5,73 +5,73 @@ import matplotlib.pyplot as plt
 import numpy as np
 import base64
 
-# Temayı seç
+# Set the theme
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-# Seaborn kütüphanesinden tips veri setini yükleme
+# Load the 'tips' dataset from the Seaborn library
 tips = sns.load_dataset('tips')
 
-# Sayfa düzenleme
+# Page layout
 st.set_page_config(
     page_title="Tips Dataset Analysis",
     page_icon=":chart_with_upwards_trend:",
     layout="wide"
 )
 
-# Ana başlık
-st.markdown('# Tips Veri Seti Analizi')
+# Main title
+st.markdown('# Tips Dataset Analysis')
 
-# Sidebar'ı oluştur
+# Sidebar
 st.sidebar.header("Options")
 
-# Dropdown'lar
+# Dropdowns
 sex = st.sidebar.selectbox('Select Gender', ['Male', 'Female'])
 day = st.sidebar.selectbox('Select Day', tips['day'].unique().tolist())
 time = st.sidebar.selectbox('Select Time', ['Lunch', 'Dinner'])
 
-# Filtreleme seçenekleri
+# Additional Filters
 st.sidebar.subheader("Additional Filters")
 smoker_filter = st.sidebar.checkbox("Filter by Smoker")
 
-# Heatmap ve Korelasyon gösterim seçimi
+# Heatmap and Correlation option
 show_heatmap = st.sidebar.checkbox("Show Heatmap and Correlation")
 
-# Matplotlib Figürü oluşturma fonksiyonu
+# Function to create a bar chart
 def create_bar_chart(selected_data, x_feature, y_feature):
     plt.figure(figsize=(12, 6))
     sns.barplot(x=x_feature, y=y_feature, data=selected_data)
-    plt.xticks(rotation=45)  # X ekseni etiketlerini 45 derece döndürme
+    plt.xticks(rotation=45)
     plt.tight_layout()
-    st.pyplot()  # Streamlit için plt.show() yerine st.pyplot() kullanılır
+    st.pyplot()
 
-# Dropdown değişikliklerine tepki gösterme
+# React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
 
-# Ek filtreleme (smoker)
+# Apply additional filters (smoker)
 if smoker_filter:
     selected_data = selected_data[selected_data['smoker'] == 'Yes']
 
-# Veri setinde NaN değerleri kontrol etme
+# Check for NaN values in the dataset
 nan_values = selected_data.isnull().sum()
 st.sidebar.write("NaN Values in the Data:")
 st.sidebar.write(nan_values)
 
-# NaN değerleri temizleme
+# Drop NaN values
 selected_data = selected_data.dropna()
 
 if not selected_data.empty:
     x_feature = st.sidebar.selectbox('Select X Feature', selected_data.columns.tolist())
     y_feature = st.sidebar.selectbox('Select Y Feature', selected_data.columns.tolist())
     create_bar_chart(selected_data, x_feature, y_feature)
-    
-    # Veri seti hakkında genel istatistiksel bilgiler
+
+    # General statistical information about the dataset
     st.sidebar.subheader("General Statistics")
     st.sidebar.write(selected_data.describe())
 
-    # Grafik türünü seçme
+    # Choose the plot type
     plot_type = st.sidebar.selectbox("Select Plot Type", ["Bar Plot", "Scatter Plot", "Line Plot"])
 
-    # Seçilen grafik türüne göre görselleştirme
+    # Visualization based on the selected plot type
     if plot_type == "Bar Plot":
         create_bar_chart(selected_data, x_feature, y_feature)
     elif plot_type == "Scatter Plot":
@@ -81,42 +81,38 @@ if not selected_data.empty:
         st.sidebar.subheader("Line Plot")
         st.sidebar.line_chart(data=selected_data)
 
-    # Korelasyon Matrisi ve Heatmap
+    # Correlation Matrix and Heatmap
     if show_heatmap:
         st.write("### Correlation Matrix")
 
-        # Kategorik olmayan sütunları seç
+        # Select non-categorical columns
         numerical_columns = selected_data.select_dtypes(include=['float64', 'int64']).columns.tolist()
 
-        # Korelasyon matrisindeki NaN değerlere yönelik uyarıyı engelleme
+        # Handle NaN values in the correlation matrix
         with np.errstate(divide='ignore', invalid='ignore'):
             correlation_matrix = selected_data[numerical_columns].corr()
             sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
 
-        # CSV dosyasını indirme bağlantısı
+        # Download CSV link
         csv_file = selected_data.to_csv(index=False).encode('utf-8')
         b64 = base64.b64encode(csv_file).decode()
-        href = f'<a href="data:file/csv;base64,{b64}" download="{csv_name}.csv">Click to download CSV file</a>'
+        href = f'<a href="data:file/csv;base64,{b64}" download="selected_data.csv">Click to download CSV file</a>'
         st.sidebar.markdown(href, unsafe_allow_html=True)
 
-    # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
+# Response to the "Save" button click event (for CSV file)
 def save_csv():
-    # selected_data'ya göre filtreleme işlemleri...
+    # Apply filtering based on selected_data...
     
     if not selected_data.empty:
-        # Dosyayı Streamlit'ten kullanıcıya indirme
+        # Download the file to the user from Streamlit
         csv_file = selected_data.to_csv(index=False).encode('utf-8')
         b64 = base64.b64encode(csv_file).decode()
-        href = f'<a href="data:text/csv;base64,{b64}" download="{csv_name}.csv">Click to Download {csv_name}.csv</a>'
+        href = f'<a href="data:text/csv;base64,{b64}" download="selected_data.csv">Click to Download selected_data.csv</a>'
         st.sidebar.markdown(href, unsafe_allow_html=True)
-        st.sidebar.success(f"Data saved. Click the download link to get the CSV file.")
+        st.sidebar.success("Data saved. Click the download link to get the CSV file.")
     else:
         st.sidebar.warning("No data available for the selected filters.")
 
-
-
-# Save düğmesi (CSV dosyası için)
-save_csv_button = st.sidebar.button('Save as CSV', on_click=save_csv)
-
-# ... (Kodunuzun geri kalanı)
-
+# Save button click event
+if st.sidebar.button("Save as CSV"):
+    save_csv()
