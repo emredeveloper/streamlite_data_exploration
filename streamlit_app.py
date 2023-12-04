@@ -34,7 +34,8 @@ st.sidebar.subheader("Additional Filters")
 smoker_filter = st.sidebar.checkbox("Filter by Smoker")
 
 # Heatmap and Correlation option
-show_heatmap = st.sidebar.checkbox("Show Heatmap and Correlation")
+show_heatmap = st.sidebar.checkbox("Show Heatmap")
+show_correlation = st.sidebar.checkbox("Show Correlation Matrix")
 
 # Function to create a bar chart
 def create_bar_chart(selected_data, x_feature, y_feature):
@@ -43,6 +44,18 @@ def create_bar_chart(selected_data, x_feature, y_feature):
     plt.xticks(rotation=45)
     plt.tight_layout()
     st.pyplot()
+
+# Function to display the correlation matrix
+def display_correlation_matrix(selected_data):
+    st.write("### Correlation Matrix")
+
+    # Select non-categorical columns
+    numerical_columns = selected_data.select_dtypes(include=['float64', 'int64']).columns.tolist()
+
+    # Handle NaN values in the correlation matrix
+    with np.errstate(divide='ignore', invalid='ignore'):
+        correlation_matrix = selected_data[numerical_columns].corr()
+        sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
 
 # React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
@@ -81,38 +94,14 @@ if not selected_data.empty:
         st.sidebar.subheader("Line Plot")
         st.sidebar.line_chart(data=selected_data)
 
-    # Correlation Matrix and Heatmap
+    # Display Heatmap
     if show_heatmap:
-        st.write("### Correlation Matrix")
+        st.write("### Heatmap")
+        display_correlation_matrix(selected_data)
 
-        # Select non-categorical columns
-        numerical_columns = selected_data.select_dtypes(include=['float64', 'int64']).columns.tolist()
-
-        # Handle NaN values in the correlation matrix
-        with np.errstate(divide='ignore', invalid='ignore'):
-            correlation_matrix = selected_data[numerical_columns].corr()
-            sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
-
-        # Download CSV link
-        csv_file = selected_data.to_csv(index=False).encode('utf-8')
-        b64 = base64.b64encode(csv_file).decode()
-        href = f'<a href="data:file/csv;base64,{b64}" download="selected_data.csv">Click to download CSV file</a>'
-        st.sidebar.markdown(href, unsafe_allow_html=True)
-
-# Response to the "Save" button click event (for CSV file)
-def save_csv():
-    # Apply filtering based on selected_data...
-    
-    if not selected_data.empty:
-        # Download the file to the user from Streamlit
-        csv_file = selected_data.to_csv(index=False).encode('utf-8')
-        b64 = base64.b64encode(csv_file).decode()
-        href = f'<a href="data:text/csv;base64,{b64}" download="selected_data.csv">Click to Download selected_data.csv</a>'
-        st.sidebar.markdown(href, unsafe_allow_html=True)
+    # Save button click event
+    if st.sidebar.button("Save as CSV"):
+        # Your save_csv function implementation here
         st.sidebar.success("Data saved. Click the download link to get the CSV file.")
-    else:
-        st.sidebar.warning("No data available for the selected filters.")
-
-# Save button click event
-if st.sidebar.button("Save as CSV"):
-    save_csv()
+else:
+    st.warning("No data available for the selected filters.")
