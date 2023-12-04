@@ -36,16 +36,15 @@ def save_csv():
     else:
         st.warning("No data available for the selected filters.")
 
-# Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
-if save_csv_button:
-    save_csv()
-
 # Dropdown değişikliklerine tepki gösterme
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
 if not selected_data.empty:
-    x_feature = 'smoker'  # İsterseniz farklı bir özelliği seçebilirsiniz
-    y_feature = 'total_bill'  # İsterseniz farklı bir özelliği seçebilirsiniz
+    x_feature = st.selectbox('Select X Feature', selected_data.columns.tolist())
+    y_feature = st.selectbox('Select Y Feature', selected_data.columns.tolist())
     create_bar_chart(selected_data, x_feature, y_feature)
+else:
+    st.warning("No data available for the selected filters.")
+
 
 # Veri seti hakkında genel istatistiksel bilgiler
 st.write("### General Statistics")
@@ -63,10 +62,6 @@ elif plot_type == "Scatter Plot":
 elif plot_type == "Line Plot":
     st.write("### Line Plot")
     st.line_chart(data=selected_data)
-
-# Tema seçimi
-theme_options = ["Default", "Dark", "Whitegrid", "Darkgrid", "White"]
-theme = st.selectbox("Select Theme", theme_options)
 
 # Seçilen tema ismini kullanarak seaborn temasını ayarla
 if theme.lower() == "default":
