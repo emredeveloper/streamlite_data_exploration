@@ -3,11 +3,10 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import base64
 
 # Temayı seç
 st.set_option('deprecation.showPyplotGlobalUse', False)
-st.set_option('theme', { 'styles': ['styles.css'] })
-
 
 # Seaborn kütüphanesinden tips veri setini yükleme
 tips = sns.load_dataset('tips')
@@ -94,15 +93,10 @@ if not selected_data.empty:
             correlation_matrix = selected_data[numerical_columns].corr()
             sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
 
-        st.pyplot()
-
-    # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
-    csv_name = st.sidebar.text_input('Enter CSV file name', 'selected_data')
-    if st.sidebar.button('Save as CSV'):
-        # Dosyayı Streamlit'ten kullanıcıya indirme
+        # CSV dosyasını indirme bağlantısı
         csv_file = selected_data.to_csv(index=False).encode('utf-8')
-        st.sidebar.text(f"Click [here](data:text/csv;base64,{base64.b64encode(csv_file).decode()}) to download the CSV file.")
-        st.success(f"Data saved. Click the link to download the CSV file.")
+        b64 = base64.b64encode(csv_file).decode()
+        href = f'<a href="data:file/csv;base64,{b64}" download="{csv_name}.csv">Click to download CSV file</a>'
+        st.sidebar.markdown(href, unsafe_allow_html=True)
 
-else:
-    st.sidebar.warning("No data available for the selected filters.")
+    # Save düğmesine tıklanma olayına tepki gösterme
