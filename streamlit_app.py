@@ -16,9 +16,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# Ana başlık
-st.markdown('# Tips Veri Seti Analizi')
-
 # Sidebar'ı oluştur
 st.sidebar.header("Options")
 
@@ -84,12 +81,13 @@ if not selected_data.empty:
 else:
     st.sidebar.warning("No data available for the selected filters.")
 
-# Korelasyon Matrisi
-st.write("### Correlation Matrix")
-correlation_matrix = selected_data.corr()
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
-st.pyplot()
-
+# Korelasyon Matrisi butonu
+if st.button("Show Correlation Matrix"):
+    # Korelasyon Matrisi
+    st.write("### Correlation Matrix")
+    correlation_matrix = selected_data.corr()
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
+    st.pyplot()
 
 # Ana sayfa içeriği
 st.write("Welcome to the Tips Dataset Analysis App!")
