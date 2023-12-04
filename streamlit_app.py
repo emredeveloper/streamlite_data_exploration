@@ -3,6 +3,8 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 
+st.set_option('deprecation.showPyplotGlobalUse', False)
+
 # Seaborn kütüphanesinden tips veri setini yükleme
 tips = sns.load_dataset('tips')
 
