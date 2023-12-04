@@ -75,48 +75,6 @@ selected_data = selected_data.dropna()
 st.write("## Selected Data")
 st.write(selected_data)
 
-# Function to handle file upload and analysis
-def handle_uploaded_file():
-    uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
-
-    if uploaded_file is not None:
-        global uploaded_data
-        uploaded_data = pd.read_csv(uploaded_file)
-
-        st.write("## Uploaded Data")
-        st.write(uploaded_data)
-
-        # Perform analysis on the uploaded data (you can customize this part)
-        st.write("## General Information about the uploaded data:")
-        st.write(uploaded_data.info())
-
-        # Example analysis
-        st.write("## Example Analysis on the uploaded data:")
-        selected_column = st.selectbox("Select Column for Visualization", uploaded_data.columns)
-
-        # Line plot instead of bar chart
-        st.line_chart(uploaded_data[selected_column])
-
-        # Update button
-        if st.button("Update and Save as CSV"):
-            # Save updated CSV
-            save_as_csv(uploaded_data, csv_name='updated_data')
-            st.success("Data updated and saved as CSV.")
-
-# React to dropdown changes
-selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
-
-# Apply additional filters (smoker)
-if smoker_filter:
-    selected_data = selected_data[selected_data['smoker'] == 'Yes']
-
-# Drop NaN values
-selected_data = selected_data.dropna()
-
-# Display the selected data
-st.write("## Selected Data")
-st.write(selected_data)
-
 # Call the function to handle file upload and analysis
 handle_uploaded_file()
 
