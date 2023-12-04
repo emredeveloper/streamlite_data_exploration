@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # Veri setlerini yükleme
-dataset_names = ['tips', 'iris']  # Eklemek istediğiniz diğer veri setlerini buraya ekleyin
+dataset_names = ['tips', 'iris']
 selected_dataset_name = st.sidebar.selectbox('Select Dataset', dataset_names)
 
 # Veri setini seçilen isme göre yükleme
@@ -14,7 +14,6 @@ if selected_dataset_name == 'tips':
     dataset = sns.load_dataset('tips')
 elif selected_dataset_name == 'iris':
     dataset = sns.load_dataset('iris')
-# Ekstra veri setlerini eklemek için buraya ekleyebilirsiniz
 
 # Ana başlık
 st.markdown(f'# {selected_dataset_name.capitalize()} Dataset Analysis')
