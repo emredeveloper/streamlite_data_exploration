@@ -84,6 +84,24 @@ def display_regression_plot(selected_data, x_feature, y_feature):
     plt.ylabel(y_feature)
     st.pyplot()
 
+# Function to handle file upload and analysis
+def handle_uploaded_file():
+    uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+
+    if uploaded_file is not None:
+        uploaded_data = pd.read_csv(uploaded_file)
+
+        st.write("## Uploaded Data")
+        st.write(uploaded_data)
+
+        # Perform analysis on the uploaded data (you can customize this part)
+        st.write("## General Information about the uploaded data:")
+        st.write(uploaded_data.info())
+
+        # Example analysis
+        st.write("## Example Analysis on the uploaded data:")
+        st.bar_chart(uploaded_data['column_name'])
+
 # React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
 
@@ -97,6 +115,9 @@ selected_data = selected_data.dropna()
 # Display the selected data
 st.write("## Selected Data")
 st.write(selected_data)
+
+# Call the function to handle file upload and analysis
+handle_uploaded_file()
 
 if not selected_data.empty:
     x_feature = st.sidebar.selectbox('Select X Feature', selected_data.columns.tolist())
