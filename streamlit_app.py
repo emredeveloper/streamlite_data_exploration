@@ -109,6 +109,12 @@ def handle_uploaded_file():
         # Line plot instead of bar chart
         st.line_chart(uploaded_data[selected_column])
 
+        # Update button
+        if st.button("Update and Save as CSV"):
+            # Save updated CSV
+            save_as_csv(uploaded_data, csv_name='updated_data')
+            st.success("Data updated and saved as CSV.")
+
 # React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
 
