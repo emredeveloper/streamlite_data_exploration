@@ -89,6 +89,21 @@ if st.button("Show Correlation Matrix"):
     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
     st.pyplot()
 
+def create_heatmap(selected_data):
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(selected_data.corr(), annot=True, cmap='coolwarm', linewidths=.5)
+    plt.title("Correlation Heatmap")
+    plt.tight_layout()
+    st.pyplot()
+
+# Add a button to the sidebar to toggle heatmap display
+show_heatmap = st.sidebar.button("Show Heatmap")
+
+# Create the heatmap on button click
+if show_heatmap:
+    create_heatmap(selected_data)
+
+
 # Ana sayfa içeriği
 st.write("Welcome to the Tips Dataset Analysis App!")
 st.write("This app allows you to explore and analyze the 'tips' dataset using Streamlit and Seaborn.")
