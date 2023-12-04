@@ -5,6 +5,43 @@ import matplotlib.pyplot as plt
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
+# Karanlık tema ekleme
+st.markdown(
+    """
+    <style>
+    body {
+        background-color: #1E1E1E;  /* Karanlık arkaplan rengi */
+        color: #FFFFFF;  /* Yazı rengi */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Kayan butonu oluştur
+scroll_button = st.button("Scroll to Top")
+
+# Kayan butonun CSS stilini belirle
+st.markdown(
+    """
+    <style>
+    .scroll-btn-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Kayan butonu HTML ile oluştur ve CSS sınıfını ekle
+st.markdown(
+    f'<div class="scroll-btn-container">{scroll_button}</div>',
+    unsafe_allow_html=True
+)
+
 # Seaborn kütüphanesinden tips veri setini yükleme
 tips = sns.load_dataset('tips')
 
