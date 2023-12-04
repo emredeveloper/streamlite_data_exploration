@@ -1,2 +1,8 @@
 [deprecation]
 showPyplotGlobalUse = false
+
+# Örnek tema ve renk ayarları
+[theme]
+selected = "dark"  # "light" veya "dark" olarak seçilebilir
+primary_color = "#3498db"
+secondary_color = "#2ecc71"
