@@ -55,6 +55,15 @@ def display_correlation_matrix(selected_data):
         sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
         st.pyplot()
 
+# Function to display the heatmap
+def display_heatmap(selected_data):
+    st.write("### Heatmap")
+
+    # You can customize the heatmap based on your specific requirements
+    plt.figure(figsize=(12, 8))
+    sns.heatmap(selected_data.corr(), annot=True, cmap='coolwarm', linewidths=.5)
+    st.pyplot()
+
 # React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
 
@@ -89,6 +98,9 @@ if not selected_data.empty:
 
     # Display Correlation Matrix
     display_correlation_matrix(selected_data)
+
+    # Display Heatmap
+    display_heatmap(selected_data)
 
     # Save button click event
     if st.sidebar.button("Save as CSV"):
