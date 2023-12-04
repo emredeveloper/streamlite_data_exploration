@@ -100,11 +100,28 @@ if not selected_data.empty:
 
 
     # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
-    def save_csv():
-        selected_data.to_csv(f"{csv_name}.csv", index=False)
-        st.success(f"Data saved as {csv_name}.csv")
+    # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
+def save_csv():
+    selected_data = dataset.copy()
+    if 'sex' in dataset.columns:
+        selected_data = selected_data[selected_data['sex'] == sex]
+    if 'day' in dataset.columns:
+        selected_data = selected_data[selected_data['day'] == day]
+    if 'time' in dataset.columns:
+        selected_data = selected_data[selected_data['time'] == time]
+    
+    if not selected_data.empty:
+        # Dosyayı Streamlit'ten kullanıcıya indirme
+        csv_file = selected_data.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label=f"Click to Download {csv_name}.csv",
+            data=csv_file,
+            file_name=f"{csv_name}.csv",
+            mime="text/csv"
+        )
+        st.success(f"Data saved. Click the download button to get the CSV file.")
+    else:
+        st.warning("No data available for the selected filters.")
 
-    if save_csv_button:
-        save_csv()
 else:
     st.sidebar.warning("No data available for the selected filters.")
