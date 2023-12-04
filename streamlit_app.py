@@ -9,6 +9,13 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 # Seaborn kütüphanesinden tips veri setini yükleme
 tips = sns.load_dataset('tips')
 
+# Sayfa düzenleme
+st.set_page_config(
+    page_title="Tips Dataset Analysis",
+    page_icon=":chart_with_upwards_trend:",
+    layout="wide"
+)
+
 # Ana başlık
 st.markdown('# Tips Veri Seti Analizi')
 
@@ -76,3 +83,15 @@ if not selected_data.empty:
     create_bar_chart(selected_data, x_feature, y_feature)
 else:
     st.sidebar.warning("No data available for the selected filters.")
+
+# Ana sayfa içeriği
+st.write("Welcome to the Tips Dataset Analysis App!")
+st.write("This app allows you to explore and analyze the 'tips' dataset using Streamlit and Seaborn.")
+st.write("Use the sidebar on the left to customize your analysis.")
+
+# Örnek içerik ekleme
+st.write("Here are some key insights:")
+st.write("- The dataset contains information about tips given in a restaurant.")
+st.write("- You can filter the data based on gender, day, and time.")
+st.write("- Choose different features for X and Y axes to visualize the data.")
+st.write("- Save the filtered data as a CSV file using the 'Save as CSV' button in the sidebar.")
