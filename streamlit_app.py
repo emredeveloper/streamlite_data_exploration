@@ -86,14 +86,18 @@ if not selected_data.empty:
 
     # Korelasyon Matrisi ve Heatmap
     if show_heatmap:
-        st.write("### Correlation Matrix")
-        correlation_matrix = selected_data.corr()
-        
-        # Korelasyon matrisindeki NaN değerlere yönelik uyarıyı engelleme
-        with np.errstate(divide='ignore', invalid='ignore'):
-            sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
-        
-        st.pyplot()
+    st.write("### Correlation Matrix")
+
+    # Kategorik olmayan sütunları seç
+    numerical_columns = selected_data.select_dtypes(include=['float64', 'int64']).columns.tolist()
+
+    # Korelasyon matrisindeki NaN değerlere yönelik uyarıyı engelleme
+    with np.errstate(divide='ignore', invalid='ignore'):
+        correlation_matrix = selected_data[numerical_columns].corr()
+        sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
+
+    st.pyplot()
+
 
     # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
     def save_csv():
