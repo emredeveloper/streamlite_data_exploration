@@ -33,10 +33,6 @@ time = st.sidebar.selectbox('Select Time', ['Lunch', 'Dinner'])
 st.sidebar.subheader("Additional Filters")
 smoker_filter = st.sidebar.checkbox("Filter by Smoker")
 
-# Heatmap and Correlation option
-show_heatmap = st.sidebar.checkbox("Show Heatmap")
-show_correlation = st.sidebar.checkbox("Show Correlation Matrix")
-
 # Function to create a bar chart
 def create_bar_chart(selected_data, x_feature, y_feature):
     plt.figure(figsize=(12, 6))
@@ -45,6 +41,7 @@ def create_bar_chart(selected_data, x_feature, y_feature):
     plt.tight_layout()
     st.pyplot()
 
+# Function to display the correlation matrix
 def display_correlation_matrix(selected_data):
     st.write("### Correlation Matrix")
 
@@ -64,11 +61,6 @@ selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time']
 # Apply additional filters (smoker)
 if smoker_filter:
     selected_data = selected_data[selected_data['smoker'] == 'Yes']
-
-# Check for NaN values in the dataset
-nan_values = selected_data.isnull().sum()
-st.sidebar.write("NaN Values in the Data:")
-st.sidebar.write(nan_values)
 
 # Drop NaN values
 selected_data = selected_data.dropna()
@@ -95,10 +87,8 @@ if not selected_data.empty:
         st.sidebar.subheader("Line Plot")
         st.sidebar.line_chart(data=selected_data)
 
-    # Display Heatmap
-    if show_heatmap:
-        st.write("### Heatmap")
-        display_correlation_matrix(selected_data)
+    # Display Correlation Matrix
+    display_correlation_matrix(selected_data)
 
     # Save button click event
     if st.sidebar.button("Save as CSV"):
