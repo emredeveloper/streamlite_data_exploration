@@ -3,44 +3,18 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Temayı seç
+theme = st.sidebar.selectbox("Select Theme", ["light", "dark"])
+
+# Temayı ayarla
+if theme == "dark":
+    st.markdown('<style>body { background-color: #1E1E1E; color: #FFFFFF; }</style>', unsafe_allow_html=True)
+    st.sidebar.markdown('<style>body { background-color: #1E1E1E; color: #FFFFFF; }</style>', unsafe_allow_html=True)
+else:
+    st.markdown('<style>body { background-color: #FFFFFF; color: #000000; }</style>', unsafe_allow_html=True)
+    st.sidebar.markdown('<style>body { background-color: #FFFFFF; color: #000000; }</style>', unsafe_allow_html=True)
+
 st.set_option('deprecation.showPyplotGlobalUse', False)
-
-# Karanlık tema ekleme
-st.markdown(
-    """
-    <style>
-    body {
-        background-color: #1E1E1E;  /* Karanlık arkaplan rengi */
-        color: #FFFFFF;  /* Yazı rengi */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# Kayan butonu oluştur
-scroll_button = st.button("Scroll to Top")
-
-# Kayan butonun CSS stilini belirle
-st.markdown(
-    """
-    <style>
-    .scroll-btn-container {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 1;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# Kayan butonu HTML ile oluştur ve CSS sınıfını ekle
-st.markdown(
-    f'<div class="scroll-btn-container">{scroll_button}</div>',
-    unsafe_allow_html=True
-)
 
 # Seaborn kütüphanesinden tips veri setini yükleme
 tips = sns.load_dataset('tips')
@@ -98,13 +72,6 @@ if not selected_data.empty:
     elif plot_type == "Line Plot":
         st.write("### Line Plot")
         st.line_chart(data=selected_data)
-
-    # Seçilen tema ismini kullanarak seaborn temasını ayarla
-    theme = st.selectbox("Select Theme", ["Default", "Dark", "Whitegrid", "Darkgrid", "White"])
-    if theme.lower() == "default":
-        sns.set_theme()
-    else:
-        sns.set_theme(style=theme.lower())
 
     # Filtreleme seçenekleri
     st.write("### Additional Filters")
