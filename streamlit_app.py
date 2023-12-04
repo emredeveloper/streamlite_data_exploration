@@ -6,8 +6,6 @@ import numpy as np
 
 # Temayı seç
 st.set_option('deprecation.showPyplotGlobalUse', False)
-# st.set_option('theme', { 'styles': ['styles.css'] })
-
 
 # Seaborn kütüphanesinden tips veri setini yükleme
 tips = sns.load_dataset('tips')
@@ -101,13 +99,8 @@ if not selected_data.empty:
     if st.sidebar.button('Save as CSV'):
         # Dosyayı Streamlit'ten kullanıcıya indirme
         csv_file = selected_data.to_csv(index=False).encode('utf-8')
-        st.sidebar.download_button(
-            label=f"Click to Download {csv_name}.csv",
-            data=csv_file,
-            file_name=f"{csv_name}.csv",
-            mime="text/csv"
-        )
-        st.success(f"Data saved. Click the download button to get the CSV file.")
+        st.sidebar.text(f"Click [here](data:text/csv;base64,{base64.b64encode(csv_file).decode()}) to download the CSV file.")
+        st.success(f"Data saved. Click the link to download the CSV file.")
 
 else:
     st.sidebar.warning("No data available for the selected filters.")
