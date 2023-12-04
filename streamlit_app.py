@@ -41,18 +41,15 @@ def create_bar_chart(selected_data, x_feature, y_feature):
     plt.tight_layout()
     st.pyplot()
 
-# Function to display the correlation matrix
+# Function to display the correlation matrix for numeric columns
 def display_correlation_matrix(selected_data):
     st.write("### Correlation Matrix")
 
-    # One-hot encode categorical variables
-    selected_data_encoded = pd.get_dummies(selected_data, columns=['sex', 'day', 'time'], drop_first=True)
+    # Select numeric columns
+    numerical_columns = selected_data.select_dtypes(include=['float64', 'int64']).columns.tolist()
 
-    # Convert 'smoker' column to numerical values
-    selected_data_encoded['smoker'] = selected_data['smoker'].map({'Yes': 1, 'No': 0})
-
-    # Calculate correlation matrix
-    correlation_matrix = selected_data_encoded.corr()
+    # Calculate correlation matrix for numeric columns
+    correlation_matrix = selected_data[numerical_columns].corr()
 
     plt.figure(figsize=(10, 8))
     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
