@@ -2,6 +2,7 @@ import streamlit as st
 import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Temayı seç
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -16,6 +17,9 @@ st.set_page_config(
     layout="wide"
 )
 
+# Ana başlık
+st.markdown('# Tips Veri Seti Analizi')
+
 # Sidebar'ı oluştur
 st.sidebar.header("Options")
 
@@ -23,6 +27,10 @@ st.sidebar.header("Options")
 sex = st.sidebar.selectbox('Select Gender', ['Male', 'Female'])
 day = st.sidebar.selectbox('Select Day', tips['day'].unique().tolist())
 time = st.sidebar.selectbox('Select Time', ['Lunch', 'Dinner'])
+
+# Filtreleme seçenekleri
+st.sidebar.subheader("Additional Filters")
+smoker_filter = st.sidebar.checkbox("Filter by Smoker")
 
 # Matplotlib Figürü oluşturma fonksiyonu
 def create_bar_chart(selected_data, x_feature, y_feature):
@@ -36,18 +44,21 @@ def create_bar_chart(selected_data, x_feature, y_feature):
 csv_name = st.sidebar.text_input('Enter CSV file name', 'selected_data')
 save_csv_button = st.sidebar.button('Save as CSV')
 
-# Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
-def save_csv():
-    selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
-    
-    if not selected_data.empty:
-        selected_data.to_csv(f"{csv_name}.csv", index=False)
-        st.success(f"Data saved as {csv_name}.csv")
-    else:
-        st.warning("No data available for the selected filters.")
-
 # Dropdown değişikliklerine tepki gösterme
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
+
+# Ek filtreleme (smoker)
+if smoker_filter:
+    selected_data = selected_data[selected_data['smoker'] == 'Yes']
+
+# Veri setinde NaN değerleri kontrol etme
+nan_values = selected_data.isnull().sum()
+st.sidebar.write("NaN Values in the Data:")
+st.sidebar.write(nan_values)
+
+# NaN değerleri temizleme
+selected_data = selected_data.dropna()
+
 if not selected_data.empty:
     x_feature = st.sidebar.selectbox('Select X Feature', selected_data.columns.tolist())
     y_feature = st.sidebar.selectbox('Select Y Feature', selected_data.columns.tolist())
@@ -70,39 +81,22 @@ if not selected_data.empty:
         st.sidebar.subheader("Line Plot")
         st.sidebar.line_chart(data=selected_data)
 
-    # Filtreleme seçenekleri
-    st.sidebar.subheader("Additional Filters")
-    smoker_filter = st.sidebar.checkbox("Filter by Smoker")
-    if smoker_filter:
-        selected_data = selected_data[selected_data['smoker'] == 'Yes']
-
-    # Yeniden oluşturulan grafik
-    create_bar_chart(selected_data, x_feature, y_feature)
-else:
-    st.sidebar.warning("No data available for the selected filters.")
-
-# Button with dropdown menu
-option = st.sidebar.selectbox("Correlation Analysis", ["Matrix", "Heatmap"])
-
-if option == "Matrix":
-    # Show correlation matrix
+    # Korelasyon Matrisi
     st.write("### Correlation Matrix")
     correlation_matrix = selected_data.corr()
-    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
+    
+    # Korelasyon matrisindeki NaN değerlere yönelik uyarıyı engelleme
+    with np.errstate(divide='ignore', invalid='ignore'):
+        sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
+    
     st.pyplot()
 
-elif option == "Heatmap":
-    create_heatmap(selected_data)
+    # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
+    def save_csv():
+        selected_data.to_csv(f"{csv_name}.csv", index=False)
+        st.success(f"Data saved as {csv_name}.csv")
 
-
-# Ana sayfa içeriği
-st.write("Welcome to the Tips Dataset Analysis App!")
-st.write("This app allows you to explore and analyze the 'tips' dataset using Streamlit and Seaborn.")
-st.write("Use the sidebar on the left to customize your analysis.")
-
-# Örnek içerik ekleme
-st.write("Here are some key insights:")
-st.write("- The dataset contains information about tips given in a restaurant.")
-st.write("- You can filter the data based on gender, day, and time.")
-st.write("- Choose different features for X and Y axes to visualize the data.")
-st.write("- Save the filtered data as a CSV file using the 'Save as CSV' button in the sidebar.")
+    if save_csv_button:
+        save_csv()
+else:
+    st.sidebar.warning("No data available for the selected filters.")
