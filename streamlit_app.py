@@ -45,7 +45,6 @@ def create_bar_chart(selected_data, x_feature, y_feature):
     plt.tight_layout()
     st.pyplot()
 
-# Function to display the correlation matrix
 def display_correlation_matrix(selected_data):
     st.write("### Correlation Matrix")
 
@@ -55,7 +54,9 @@ def display_correlation_matrix(selected_data):
     # Handle NaN values in the correlation matrix
     with np.errstate(divide='ignore', invalid='ignore'):
         correlation_matrix = selected_data[numerical_columns].corr()
-        st.write(sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5).figure)
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
+        st.pyplot()
 
 # React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
