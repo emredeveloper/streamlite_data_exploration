@@ -99,4 +99,13 @@ if not selected_data.empty:
         href = f'<a href="data:file/csv;base64,{b64}" download="{csv_name}.csv">Click to download CSV file</a>'
         st.sidebar.markdown(href, unsafe_allow_html=True)
 
-    # Save düğmesine tıklanma olayına tepki gösterme
+    # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
+    csv_name = st.sidebar.text_input('Enter CSV file name', 'selected_data')
+    if st.sidebar.button('Save as CSV'):
+        # Dosyayı Streamlit'ten kullanıcıya indirme
+        csv_file = selected_data.to_csv(index=False).encode('utf-8')
+        st.sidebar.text(f"Click [here](data:text/csv;base64,{base64.b64encode(csv_file).decode()}) to download the CSV file.")
+        st.success(f"Data saved. Click the link to download the CSV file.")
+
+else:
+    st.sidebar.warning("No data available for the selected filters.")
