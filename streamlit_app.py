@@ -11,6 +11,9 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 # Load the 'tips' dataset from the Seaborn library
 tips = sns.load_dataset('tips')
 
+# Yüklü veri çerçevesi
+uploaded_data = pd.DataFrame()
+
 # Page layout
 st.set_page_config(
     page_title="Tips Dataset Analysis",
@@ -83,11 +86,13 @@ def display_regression_plot(selected_data, x_feature, y_feature):
     plt.xlabel(x_feature)
     plt.ylabel(y_feature)
     st.pyplot()
+
 # Function to handle file upload and analysis
 def handle_uploaded_file():
     uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
     if uploaded_file is not None:
+        global uploaded_data
         uploaded_data = pd.read_csv(uploaded_file)
 
         st.write("## Uploaded Data")
@@ -103,7 +108,6 @@ def handle_uploaded_file():
 
         # Line plot instead of bar chart
         st.line_chart(uploaded_data[selected_column])
-
 
 # React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
