@@ -80,11 +80,11 @@ if not selected_data.empty:
         selected_data = selected_data[selected_data['smoker'] == 'Yes']
 
 # Kategorik filtreleme
-st.write("### Categorical Filter")
-selected_day = st.selectbox("Select Day", tips['day'].unique().tolist())
+    st.write("### Categorical Filter")
+    selected_day = st.selectbox("Select Day", tips['day'].unique().tolist())
 
 # Gün özelliğine göre filtreleme
-selected_data = selected_data[selected_data['day'] == selected_day]
+        selected_data = selected_data[selected_data['day'] == selected_day]
 
 
     # Yeniden oluşturulan grafik
