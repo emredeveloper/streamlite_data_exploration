@@ -55,18 +55,6 @@ def display_correlation_matrix(selected_data):
     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
     st.pyplot()
 
-# Function to display the heatmap
-def display_heatmap(selected_data):
-    st.write("### Heatmap")
-
-    # Encode categorical columns
-    selected_data_encoded = pd.get_dummies(selected_data, columns=['sex', 'day', 'time', 'smoker'], drop_first=True)
-
-    # You can customize the heatmap based on your specific requirements
-    plt.figure(figsize=(12, 8))
-    sns.heatmap(selected_data_encoded.corr(), annot=True, cmap='coolwarm', linewidths=.5)
-    st.pyplot()
-
 # Function to save the DataFrame as a CSV file
 def save_as_csv(selected_data, csv_name='exported_data'):
     csv_file = selected_data.to_csv(index=False).encode('utf-8')
@@ -136,9 +124,6 @@ if not selected_data.empty:
 
     # Display Correlation Matrix
     display_correlation_matrix(selected_data)
-
-    # Display Heatmap
-    display_heatmap(selected_data)
 
     # Save button outside the conditional block
     if st.sidebar.button("Save as CSV"):
