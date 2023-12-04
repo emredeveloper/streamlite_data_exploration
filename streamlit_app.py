@@ -4,15 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Temayı seç
-theme = st.sidebar.selectbox("Select Theme", ["light", "dark"])
 
-# Temayı ayarla
-if theme == "dark":
-    st.markdown('<style>body { background-color: #1E1E1E; color: #FFFFFF; }</style>', unsafe_allow_html=True)
-    st.sidebar.markdown('<style>body { background-color: #1E1E1E; color: #FFFFFF; }</style>', unsafe_allow_html=True)
-else:
-    st.markdown('<style>body { background-color: #FFFFFF; color: #000000; }</style>', unsafe_allow_html=True)
-    st.sidebar.markdown('<style>body { background-color: #FFFFFF; color: #000000; }</style>', unsafe_allow_html=True)
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
