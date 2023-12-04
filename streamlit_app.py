@@ -64,6 +64,13 @@ def display_heatmap(selected_data):
     sns.heatmap(selected_data.corr(), annot=True, cmap='coolwarm', linewidths=.5)
     st.pyplot()
 
+# Function to save the DataFrame as a CSV file
+def save_as_csv(selected_data, csv_name='exported_data'):
+    csv_file = selected_data.to_csv(index=False).encode('utf-8')
+    b64 = base64.b64encode(csv_file).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="{csv_name}.csv">Click to Download {csv_name}.csv</a>'
+    st.sidebar.markdown(href, unsafe_allow_html=True)
+
 # React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
 
@@ -104,7 +111,7 @@ if not selected_data.empty:
 
     # Save button click event
     if st.sidebar.button("Save as CSV"):
-        # Your save_csv function implementation here
+        save_as_csv(selected_data, csv_name='exported_data')
         st.sidebar.success("Data saved. Click the download link to get the CSV file.")
 else:
     st.warning("No data available for the selected filters.")
