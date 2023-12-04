@@ -12,3 +12,10 @@ secondary_color = "#2ecc71"
 [page]
 title = "DataVizHub - Veri Analizi ve Görselleştirme"
 description = "Veri analizi, görselleştirme ve içgörülerin paylaşıldığı bir platform."
+
+
+# Filtreleme seçenekleri
+[filters]
+gender = ["Male", "Female"]
+day = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+time = ["Lunch", "Dinner"]
