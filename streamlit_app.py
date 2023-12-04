@@ -81,26 +81,17 @@ if not selected_data.empty:
 else:
     st.sidebar.warning("No data available for the selected filters.")
 
-# Korelasyon Matrisi butonu
-if st.button("Show Correlation Matrix"):
-    # Korelasyon Matrisi
+# Button with dropdown menu
+option = st.sidebar.selectbox("Correlation Analysis", ["Matrix", "Heatmap"])
+
+if option == "Matrix":
+    # Show correlation matrix
     st.write("### Correlation Matrix")
     correlation_matrix = selected_data.corr()
     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
     st.pyplot()
 
-def create_heatmap(selected_data):
-    plt.figure(figsize=(10, 8))
-    sns.heatmap(selected_data.corr(), annot=True, cmap='coolwarm', linewidths=.5)
-    plt.title("Correlation Heatmap")
-    plt.tight_layout()
-    st.pyplot()
-
-# Add a button to the sidebar to toggle heatmap display
-show_heatmap = st.sidebar.button("Show Heatmap")
-
-# Create the heatmap on button click
-if show_heatmap:
+elif option == "Heatmap":
     create_heatmap(selected_data)
 
 
