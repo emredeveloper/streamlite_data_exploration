@@ -84,6 +84,13 @@ if not selected_data.empty:
 else:
     st.sidebar.warning("No data available for the selected filters.")
 
+# Korelasyon Matrisi
+st.write("### Correlation Matrix")
+correlation_matrix = selected_data.corr()
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
+st.pyplot()
+
+
 # Ana sayfa içeriği
 st.write("Welcome to the Tips Dataset Analysis App!")
 st.write("This app allows you to explore and analyze the 'tips' dataset using Streamlit and Seaborn.")
