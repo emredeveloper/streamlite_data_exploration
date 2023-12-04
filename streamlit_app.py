@@ -45,15 +45,15 @@ def create_bar_chart(selected_data, x_feature, y_feature):
 def display_correlation_matrix(selected_data):
     st.write("### Correlation Matrix")
 
-    # Select non-categorical columns
-    numerical_columns = selected_data.select_dtypes(include=['float64', 'int64']).columns.tolist()
+    # One-hot encode categorical variables
+    selected_data_encoded = pd.get_dummies(selected_data, columns=['sex', 'day', 'time', 'smoker'], drop_first=True)
 
-    # Handle NaN values in the correlation matrix
-    with np.errstate(divide='ignore', invalid='ignore'):
-        correlation_matrix = selected_data[numerical_columns].corr()
-        plt.figure(figsize=(10, 8))
-        sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
-        st.pyplot()
+    # Calculate correlation matrix
+    correlation_matrix = selected_data_encoded.corr()
+    
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
+    st.pyplot()
 
 # Function to display the heatmap
 def display_heatmap(selected_data):
