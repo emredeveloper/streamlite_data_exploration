@@ -46,5 +46,33 @@ if not selected_data.empty:
     x_feature = 'smoker'  # İsterseniz farklı bir özelliği seçebilirsiniz
     y_feature = 'total_bill'  # İsterseniz farklı bir özelliği seçebilirsiniz
     create_bar_chart(selected_data, x_feature, y_feature)
-else:
-    st.warning("No data available for the selected filters.")
+
+# Veri seti hakkında genel istatistiksel bilgiler
+st.write("### General Statistics")
+st.write(selected_data.describe())
+
+# Grafik türünü seçme
+plot_type = st.selectbox("Select Plot Type", ["Bar Plot", "Scatter Plot", "Line Plot"])
+
+# Seçilen grafik türüne göre görselleştirme
+if plot_type == "Bar Plot":
+    create_bar_chart(selected_data, x_feature, y_feature)
+elif plot_type == "Scatter Plot":
+    st.write("### Scatter Plot")
+    st.scatter_chart(data=selected_data, x=x_feature, y=y_feature)
+elif plot_type == "Line Plot":
+    st.write("### Line Plot")
+    st.line_chart(data=selected_data)
+
+# Tema seçimi
+theme = st.selectbox("Select Theme", ["Default", "Dark", "Whitegrid", "Darkgrid", "White"])
+sns.set_theme(style=theme)
+
+# Filtreleme seçenekleri
+st.write("### Additional Filters")
+smoker_filter = st.checkbox("Filter by Smoker")
+if smoker_filter:
+    selected_data = selected_data[selected_data['smoker'] == 'Yes']
+
+# Yeniden oluşturulan grafik
+create_bar_chart(selected_data, x_feature, y_feature)
