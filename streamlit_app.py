@@ -112,6 +112,3 @@ def save_csv():
         st.sidebar.success(f"Data saved. Click the download link to get the CSV file.")
     else:
         st.sidebar.warning("No data available for the selected filters.")
-
-# Save düğmesi (CSV dosyası için)
-save_csv_button = st.sidebar.button('Save as CSV', on_click=save_csv)
