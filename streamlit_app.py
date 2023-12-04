@@ -83,7 +83,6 @@ def display_regression_plot(selected_data, x_feature, y_feature):
     plt.xlabel(x_feature)
     plt.ylabel(y_feature)
     st.pyplot()
-
 # Function to handle file upload and analysis
 def handle_uploaded_file():
     uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
@@ -101,7 +100,10 @@ def handle_uploaded_file():
         # Example analysis
         st.write("## Example Analysis on the uploaded data:")
         selected_column = st.selectbox("Select Column for Visualization", uploaded_data.columns)
-        st.bar_chart(uploaded_data[selected_column])
+
+        # Line plot instead of bar chart
+        st.line_chart(uploaded_data[selected_column])
+
 
 # React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
