@@ -54,13 +54,15 @@ def handle_uploaded_file():
 # Call the function to handle file upload and analysis
 handle_uploaded_file()
 
+# Update button
+if st.button("Update and Save as CSV"):
+    # Save updated CSV
+    csv_file = uploaded_data.to_csv(index=False).encode('utf-8')
+    b64 = base64.b64encode(csv_file).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="updated_data.csv">Click to Download Updated CSV</a>'
+    st.sidebar.markdown(href, unsafe_allow_html=True)
+    st.success("Data updated and saved as CSV.")
 
-
-        # Update button
-        if st.button("Update and Save as CSV"):
-            # Save updated CSV
-            save_as_csv(uploaded_data, csv_name='updated_data')
-            st.success("Data updated and saved as CSV.")
 
 # React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
