@@ -103,6 +103,10 @@ if smoker_filter:
 # Drop NaN values
 selected_data = selected_data.dropna()
 
+# Display the selected data
+st.write("## Selected Data")
+st.write(selected_data)
+
 if not selected_data.empty:
     x_feature = st.sidebar.selectbox('Select X Feature', selected_data.columns.tolist())
     y_feature = st.sidebar.selectbox('Select Y Feature', selected_data.columns.tolist())
@@ -119,8 +123,7 @@ if not selected_data.empty:
     if plot_type == "Bar Plot":
         create_bar_chart(selected_data, x_feature, y_feature)
     elif plot_type == "Scatter Plot":
-        st.sidebar.subheader("Scatter Plot")
-        st.sidebar.scatter_chart(data=selected_data, x=x_feature, y=y_feature)
+        display_scatter_plot(selected_data, x_feature, y_feature)
     elif plot_type == "Line Plot":
         st.sidebar.subheader("Line Plot")
         st.sidebar.line_chart(data=selected_data)
@@ -134,10 +137,10 @@ if not selected_data.empty:
     # Display Heatmap
     display_heatmap(selected_data)
 
-# Save button outside the conditional block
-if st.sidebar.button("Save as CSV"):
-    save_as_csv(selected_data, csv_name='exported_data')
-    st.sidebar.success("Data saved. Click the download link to get the CSV file")
+    # Save button outside the conditional block
+    if st.sidebar.button("Save as CSV"):
+        save_as_csv(selected_data, csv_name='exported_data')
+        st.sidebar.success("Data saved. Click the download link to get the CSV file")
 
 else:
     st.warning("No data available for the selected filters.")
