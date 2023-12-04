@@ -6,3 +6,9 @@ showPyplotGlobalUse = false
 selected = "dark"  # "light" veya "dark" olarak seçilebilir
 primary_color = "#3498db"
 secondary_color = "#2ecc71"
+
+
+# Sayfa başlığı ve açıklama
+[page]
+title = "DataVizHub - Veri Analizi ve Görselleştirme"
+description = "Veri analizi, görselleştirme ve içgörülerin paylaşıldığı bir platform."
