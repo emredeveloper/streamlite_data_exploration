@@ -95,10 +95,10 @@ if not selected_data.empty:
         st.pyplot()
 
     # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
-    if save_csv_button:
+    if st.sidebar.button('Save as CSV'):
         # Dosyayı Streamlit'ten kullanıcıya indirme
         csv_file = selected_data.to_csv(index=False).encode('utf-8')
-        st.download_button(
+        st.sidebar.download_button(
             label=f"Click to Download {csv_name}.csv",
             data=csv_file,
             file_name=f"{csv_name}.csv",
