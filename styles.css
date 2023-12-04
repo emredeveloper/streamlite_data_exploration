@@ -1,0 +1,15 @@
+/* Increase font size for headings */
+h1, h2, h3 {
+  font-size: 1.5em;
+}
+
+/* Make the sidebar background a nice blue */
+.sidebar .sidebar-content {
+  background-color: #f0f8ff;
+}
+
+/* Add a border to the download button */
+.download-button {
+  border: 1px solid #ddd;
+  padding: 5px;
+}
