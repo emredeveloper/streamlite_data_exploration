@@ -43,10 +43,6 @@ def create_bar_chart(selected_data, x_feature, y_feature):
     plt.tight_layout()
     st.pyplot()  # Streamlit için plt.show() yerine st.pyplot() kullanılır
 
-# Save düğmesi (CSV dosyası için)
-csv_name = st.sidebar.text_input('Enter CSV file name', 'selected_data')
-save_csv_button = st.sidebar.button('Save as CSV')
-
 # Dropdown değişikliklerine tepki gösterme
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
 
@@ -88,29 +84,18 @@ if not selected_data.empty:
     if show_heatmap:
         st.write("### Correlation Matrix")
 
-    # Kategorik olmayan sütunları seç
+        # Kategorik olmayan sütunları seç
         numerical_columns = selected_data.select_dtypes(include=['float64', 'int64']).columns.tolist()
 
-    # Korelasyon matrisindeki NaN değerlere yönelik uyarıyı engelleme
-    with np.errstate(divide='ignore', invalid='ignore'):
-        correlation_matrix = selected_data[numerical_columns].corr()
-        sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
+        # Korelasyon matrisindeki NaN değerlere yönelik uyarıyı engelleme
+        with np.errstate(divide='ignore', invalid='ignore'):
+            correlation_matrix = selected_data[numerical_columns].corr()
+            sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
 
-    st.pyplot()
-
+        st.pyplot()
 
     # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
-    # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
-def save_csv():
-    selected_data = dataset.copy()
-    if 'sex' in dataset.columns:
-        selected_data = selected_data[selected_data['sex'] == sex]
-    if 'day' in dataset.columns:
-        selected_data = selected_data[selected_data['day'] == day]
-    if 'time' in dataset.columns:
-        selected_data = selected_data[selected_data['time'] == time]
-    
-    if not selected_data.empty:
+    if save_csv_button:
         # Dosyayı Streamlit'ten kullanıcıya indirme
         csv_file = selected_data.to_csv(index=False).encode('utf-8')
         st.download_button(
@@ -120,8 +105,6 @@ def save_csv():
             mime="text/csv"
         )
         st.success(f"Data saved. Click the download button to get the CSV file.")
-    else:
-        st.warning("No data available for the selected filters.")
 
 else:
     st.sidebar.warning("No data available for the selected filters.")
