@@ -71,6 +71,28 @@ def save_as_csv(selected_data, csv_name='exported_data'):
     href = f'<a href="data:file/csv;base64,{b64}" download="{csv_name}.csv">Click to Download {csv_name}.csv</a>'
     st.sidebar.markdown(href, unsafe_allow_html=True)
 
+# Function to display the scatter plot
+def display_scatter_plot(selected_data, x_feature, y_feature):
+    st.write("### Scatter Plot")
+
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(x=x_feature, y=y_feature, data=selected_data, hue='sex', palette='viridis', size='total_bill')
+    plt.title(f'Scatter Plot between {x_feature} and {y_feature}')
+    plt.xlabel(x_feature)
+    plt.ylabel(y_feature)
+    st.pyplot()
+
+# Function to display the regression plot
+def display_regression_plot(selected_data, x_feature, y_feature):
+    st.write("### Regression Plot")
+
+    plt.figure(figsize=(10, 6))
+    sns.regplot(x=x_feature, y=y_feature, data=selected_data, scatter_kws={'s': 30}, line_kws={'color': 'red'})
+    plt.title(f'Regression Plot between {x_feature} and {y_feature}')
+    plt.xlabel(x_feature)
+    plt.ylabel(y_feature)
+    st.pyplot()
+
 # React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
 
@@ -91,7 +113,7 @@ if not selected_data.empty:
     st.sidebar.write(selected_data.describe())
 
     # Choose the plot type
-    plot_type = st.sidebar.selectbox("Select Plot Type", ["Bar Plot", "Scatter Plot", "Line Plot"])
+    plot_type = st.sidebar.selectbox("Select Plot Type", ["Bar Plot", "Scatter Plot", "Line Plot", "Scatter Plot with Regression"])
 
     # Visualization based on the selected plot type
     if plot_type == "Bar Plot":
@@ -102,6 +124,9 @@ if not selected_data.empty:
     elif plot_type == "Line Plot":
         st.sidebar.subheader("Line Plot")
         st.sidebar.line_chart(data=selected_data)
+    elif plot_type == "Scatter Plot with Regression":
+        display_scatter_plot(selected_data, x_feature, y_feature)
+        display_regression_plot(selected_data, x_feature, y_feature)
 
     # Display Correlation Matrix
     display_correlation_matrix(selected_data)
