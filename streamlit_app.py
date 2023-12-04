@@ -86,10 +86,10 @@ if not selected_data.empty:
 
     # Korelasyon Matrisi ve Heatmap
     if show_heatmap:
-    st.write("### Correlation Matrix")
+        st.write("### Correlation Matrix")
 
     # Kategorik olmayan sütunları seç
-    numerical_columns = selected_data.select_dtypes(include=['float64', 'int64']).columns.tolist()
+        numerical_columns = selected_data.select_dtypes(include=['float64', 'int64']).columns.tolist()
 
     # Korelasyon matrisindeki NaN değerlere yönelik uyarıyı engelleme
     with np.errstate(divide='ignore', invalid='ignore'):
