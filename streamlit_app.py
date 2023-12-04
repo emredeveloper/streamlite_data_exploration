@@ -39,6 +39,13 @@ if uploaded_file is not None:
         if not selected_data.empty:
             selected_data.to_csv(f"{csv_name}.csv", index=False)
             st.success(f"Data saved as {csv_name}.csv")
+
+            # Dosyayı kullanıcıya indirme bağlantısı
+            csv_file = f"{csv_name}.csv"
+            csv_data = open(csv_file, 'rb').read()
+            b64 = base64.b64encode(csv_data).decode('utf-8')
+            href = f'<a href="data:file/csv;base64,{b64}" download="{csv_file}">Download CSV File</a>'
+            st.markdown(href, unsafe_allow_html=True)
         else:
             st.warning("No data available for the selected filters.")
 
