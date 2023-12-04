@@ -46,11 +46,12 @@ def display_correlation_matrix(selected_data):
     st.write("### Correlation Matrix")
 
     # One-hot encode categorical variables
-    selected_data_encoded = pd.get_dummies(selected_data, columns=['sex', 'day', 'time', 'smoker'], drop_first=True)
+    selected_data_encoded = pd.get_dummies(selected_data, columns=['sex', 'day', 'time'], drop_first=True)
+    selected_data_encoded['smoker'] = selected_data['smoker'].map({'Yes': 1, 'No': 0})
 
     # Calculate correlation matrix
     correlation_matrix = selected_data_encoded.corr()
-    
+
     plt.figure(figsize=(10, 8))
     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
     st.pyplot()
