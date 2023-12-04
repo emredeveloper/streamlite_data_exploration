@@ -32,6 +32,9 @@ time = st.sidebar.selectbox('Select Time', ['Lunch', 'Dinner'])
 st.sidebar.subheader("Additional Filters")
 smoker_filter = st.sidebar.checkbox("Filter by Smoker")
 
+# Heatmap ve Korelasyon gösterim seçimi
+show_heatmap = st.sidebar.checkbox("Show Heatmap and Correlation")
+
 # Matplotlib Figürü oluşturma fonksiyonu
 def create_bar_chart(selected_data, x_feature, y_feature):
     plt.figure(figsize=(12, 6))
@@ -81,15 +84,16 @@ if not selected_data.empty:
         st.sidebar.subheader("Line Plot")
         st.sidebar.line_chart(data=selected_data)
 
-    # Korelasyon Matrisi
-    st.write("### Correlation Matrix")
-    correlation_matrix = selected_data.corr()
-    
-    # Korelasyon matrisindeki NaN değerlere yönelik uyarıyı engelleme
-    with np.errstate(divide='ignore', invalid='ignore'):
-        sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
-    
-    st.pyplot()
+    # Korelasyon Matrisi ve Heatmap
+    if show_heatmap:
+        st.write("### Correlation Matrix")
+        correlation_matrix = selected_data.corr()
+        
+        # Korelasyon matrisindeki NaN değerlere yönelik uyarıyı engelleme
+        with np.errstate(divide='ignore', invalid='ignore'):
+            sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=.5)
+        
+        st.pyplot()
 
     # Save düğmesine tıklanma olayına tepki gösterme (CSV dosyası için)
     def save_csv():
