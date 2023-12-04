@@ -100,7 +100,8 @@ def handle_uploaded_file():
 
         # Example analysis
         st.write("## Example Analysis on the uploaded data:")
-        st.bar_chart(uploaded_data['column_name'])
+        selected_column = st.selectbox("Select Column for Visualization", uploaded_data.columns)
+        st.bar_chart(uploaded_data[selected_column])
 
 # React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
