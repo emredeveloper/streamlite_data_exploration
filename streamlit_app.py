@@ -6,6 +6,8 @@ import numpy as np
 
 # Temayı seç
 st.set_option('deprecation.showPyplotGlobalUse', False)
+st.set_option('theme', { 'styles': ['styles.css'] })
+
 
 # Seaborn kütüphanesinden tips veri setini yükleme
 tips = sns.load_dataset('tips')
