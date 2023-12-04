@@ -109,9 +109,10 @@ if not selected_data.empty:
     # Display Heatmap
     display_heatmap(selected_data)
 
-    # Save button click event
-    if st.sidebar.button("Save as CSV"):
-        save_as_csv(selected_data, csv_name='exported_data')
-        st.sidebar.success("Data saved. Click the download link to get the CSV file.")
+# Save button outside the conditional block
+if st.sidebar.button("Save as CSV"):
+    save_as_csv(selected_data, csv_name='exported_data')
+    st.sidebar.success("Data saved. Click the download link to get the CSV file")
+
 else:
     st.warning("No data available for the selected filters.")
