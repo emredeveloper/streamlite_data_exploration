@@ -42,38 +42,38 @@ if not selected_data.empty:
     x_feature = st.selectbox('Select X Feature', selected_data.columns.tolist())
     y_feature = st.selectbox('Select Y Feature', selected_data.columns.tolist())
     create_bar_chart(selected_data, x_feature, y_feature)
+    
+    # Veri seti hakkında genel istatistiksel bilgiler
+    st.write("### General Statistics")
+    st.write(selected_data.describe())
+
+    # Grafik türünü seçme
+    plot_type = st.selectbox("Select Plot Type", ["Bar Plot", "Scatter Plot", "Line Plot"])
+
+    # Seçilen grafik türüne göre görselleştirme
+    if plot_type == "Bar Plot":
+        create_bar_chart(selected_data, x_feature, y_feature)
+    elif plot_type == "Scatter Plot":
+        st.write("### Scatter Plot")
+        st.scatter_chart(data=selected_data, x=x_feature, y=y_feature)
+    elif plot_type == "Line Plot":
+        st.write("### Line Plot")
+        st.line_chart(data=selected_data)
+
+    # Seçilen tema ismini kullanarak seaborn temasını ayarla
+    theme = st.selectbox("Select Theme", ["Default", "Dark", "Whitegrid", "Darkgrid", "White"])
+    if theme.lower() == "default":
+        sns.set_theme()
+    else:
+        sns.set_theme(style=theme.lower())
+
+    # Filtreleme seçenekleri
+    st.write("### Additional Filters")
+    smoker_filter = st.checkbox("Filter by Smoker")
+    if smoker_filter:
+        selected_data = selected_data[selected_data['smoker'] == 'Yes']
+
+    # Yeniden oluşturulan grafik
+    create_bar_chart(selected_data, x_feature, y_feature)
 else:
     st.warning("No data available for the selected filters.")
-
-
-# Veri seti hakkında genel istatistiksel bilgiler
-st.write("### General Statistics")
-st.write(selected_data.describe())
-
-# Grafik türünü seçme
-plot_type = st.selectbox("Select Plot Type", ["Bar Plot", "Scatter Plot", "Line Plot"])
-
-# Seçilen grafik türüne göre görselleştirme
-if plot_type == "Bar Plot":
-    create_bar_chart(selected_data, x_feature, y_feature)
-elif plot_type == "Scatter Plot":
-    st.write("### Scatter Plot")
-    st.scatter_chart(data=selected_data, x=x_feature, y=y_feature)
-elif plot_type == "Line Plot":
-    st.write("### Line Plot")
-    st.line_chart(data=selected_data)
-
-# Seçilen tema ismini kullanarak seaborn temasını ayarla
-if theme.lower() == "default":
-    sns.set_theme()
-else:
-    sns.set_theme(style=theme.lower())
-
-# Filtreleme seçenekleri
-st.write("### Additional Filters")
-smoker_filter = st.checkbox("Filter by Smoker")
-if smoker_filter:
-    selected_data = selected_data[selected_data['smoker'] == 'Yes']
-
-# Yeniden oluşturulan grafik
-create_bar_chart(selected_data, x_feature, y_feature)
