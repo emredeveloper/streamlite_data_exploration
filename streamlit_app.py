@@ -65,8 +65,14 @@ elif plot_type == "Line Plot":
     st.line_chart(data=selected_data)
 
 # Tema seçimi
-theme = st.selectbox("Select Theme", ["Default", "Dark", "Whitegrid", "Darkgrid", "White"])
-sns.set_theme(style=theme)
+theme_options = ["Default", "Dark", "Whitegrid", "Darkgrid", "White"]
+theme = st.selectbox("Select Theme", theme_options)
+
+# Seçilen tema ismini kullanarak seaborn temasını ayarla
+if theme.lower() == "default":
+    sns.set_theme()
+else:
+    sns.set_theme(style=theme.lower())
 
 # Filtreleme seçenekleri
 st.write("### Additional Filters")
