@@ -47,6 +47,8 @@ def display_correlation_matrix(selected_data):
 
     # One-hot encode categorical variables
     selected_data_encoded = pd.get_dummies(selected_data, columns=['sex', 'day', 'time'], drop_first=True)
+
+    # Convert 'smoker' column to numerical values
     selected_data_encoded['smoker'] = selected_data['smoker'].map({'Yes': 1, 'No': 0})
 
     # Calculate correlation matrix
