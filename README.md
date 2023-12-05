@@ -22,7 +22,6 @@ streamlit run app.py
 
 
 markdown
-Copy code
 # Streamlit Panel Data Analysis
 
 Bu GitHub deposu, Streamlit kütüphanesini kullanarak interaktif bir panel üzerinde veri analizi yapmayı amaçlamaktadır.
@@ -36,15 +35,16 @@ git clone https://github.com/kullaniciadi/streamlite_panel_data_analysis.git
 cd streamlite_panel_data_analysis
 Gerekli bağımlılıkları yükleyin:
 
-bash
-Copy code
+```bash
+
 pip install -r requirements.txt
+
 Uygulamayı başlatmak için:
 
-bash
-Copy code
+```bash
+
 streamlit run app.py
-Tarayıcınızda http://localhost:8501 adresine giderek interaktif paneli görüntüleyebilirsiniz.
+
 
 Özellikler
 Veri dosyalarını yükleyip görselleştirme
