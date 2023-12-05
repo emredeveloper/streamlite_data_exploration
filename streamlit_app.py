@@ -115,6 +115,9 @@ def handle_uploaded_file():
             save_as_csv(uploaded_data, csv_name='updated_data')
             st.success("Data updated and saved as CSV.")
 
+            # Clear the previous displayed content
+            st.experimental_rerun()
+
 # React to dropdown changes
 selected_data = tips[(tips['sex'] == sex) & (tips['day'] == day) & (tips['time'] == time)]
 
